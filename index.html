@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZORA LAGGER - DARK MODE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #000; color: #ff0000; font-family: monospace; overflow: hidden; }
+    .glitch { animation: glitch 1.2s infinite; text-shadow: 0 0 15px #f00, 0 0 30px #800; }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-4px,4px); }
+      40% { transform: translate(4px,-4px); }
+      60% { transform: translate(-4px,4px); }
+      80% { transform: translate(4px,-4px); }
+      100% { transform: translate(0); }
+    }
+    input, button { background: #111; border: 2px solid #660000; color: #ff3333; }
+    button:hover { background: #330000; transform: scale(1.05); }
+    #log { background: #0a0000; border: 3px solid #4d0000; height: 200px; overflow-y: auto; }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-6">
+  <h1 class="text-7xl font-black glitch mb-10">ZORA LAGGER</h1>
+  <p class="text-3xl mb-12 text-red-800 tracking-widest">LAG HANDPHONE TARGET - DARK EDITION</p>
+
+  <form id="floodForm" class="w-full max-w-lg space-y-6">
+    <input id="targetIP" type="text" placeholder="IP TARGET (contoh: 192.168.1.100)" required class="w-full p-5 text-xl rounded-lg focus:outline-none focus:border-red-600">
+    <div class="grid grid-cols-2 gap-6">
+      <input id="threads" type="number" value="50" min="10" max="500" placeholder="Threads" class="w-full p-5 text-xl rounded-lg focus:outline-none focus:border-red-600">
+      <input id="duration" type="number" value="60" min="10" max="600" placeholder="Duration (detik)" class="w-full p-5 text-xl rounded-lg focus:outline-none focus:border-red-600">
+    </div>
+    <button type="submit" class="w-full bg-red-950 hover:bg-red-800 text-white font-black py-6 rounded-lg text-3xl transition transform hover:scale-105 shadow-2xl shadow-red-950">
+      SUBMIT & LAGGER 🔥
+    </button>
+  </form>
+
+  <div id="log" class="w-full max-w-lg mt-10 p-6 bg-black border-4 border-red-900 rounded-xl text-green-500 text-lg font-mono overflow-y-auto max-h-80">
+    Status: Ready... Masukin IP target & gas.
+  </div>
+
+  <script>
+    const form = document.getElementById('floodForm');
+    const log = document.getElementById('log');
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const ip = document.getElementById('targetIP').value.trim();
+      const threads = document.getElementById('threads').value;
+      const duration = document.getElementById('duration').value;
+
+      if (!ip) return alert('IP target mana ajg!');
+
+      log.innerHTML += `<br><span class="text-red-600">[LAGGER START]</span> Target IP: ${ip} | Threads: ${threads} | Durasi: ${duration}s`;
+
+      try {
+        const res = await fetch(`/lag?ip=\( {encodeURIComponent(ip)}&threads= \){threads}&duration=${duration}`);
+        const txt = await res.text();
+        log.innerHTML += `<br><span class="text-red-400">${txt}</span>`;
+      } catch (err) {
+        log.innerHTML += `<br><span class="text-yellow-500">[ERROR]</span> ${err}`;
+      }
+    };
+  </script>
+</body>
+</html>

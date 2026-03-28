@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0;background:#000;color:#fff;font-family:sans-serif;text-align:center">
+
+<h2>AI HD PRO 😈</h2>
+
+<input type="file" id="file"><br><br>
+<button onclick="go()">Enhance</button>
+
+<div style="position:relative;width:90%;max-width:400px;margin:auto;margin-top:20px">
+  <img id="after" style="width:100%">
+  <img id="before" style="width:100%;position:absolute;top:0;left:0;clip-path:inset(0 50% 0 0)">
+  <input type="range" min="0" max="100" value="50"
+    oninput="slide(this.value)" style="width:100%">
+</div>
+
+<a id="dl" download style="display:block;margin-top:10px;color:cyan"></a>
+
+<script>
+let beforeURL=""
+
+function slide(v){
+  document.getElementById("before").style.clipPath =
+  \`inset(0 \${100-v}% 0 0)\`
+}
+
+async function go(){
+  let f=document.getElementById("file").files[0]
+  if(!f) return alert("pilih gambar 😹")
+
+  beforeURL=URL.createObjectURL(f)
+  document.getElementById("before").src=beforeURL
+
+  let fd=new FormData()
+  fd.append("image",f)
+
+  let r=await fetch("/upscale",{
+    method:"POST",
+    headers:{"x-user":localStorage.user},
+    body:fd
+  })
+
+  let d=await r.json()
+
+  if(d.image){
+    document.getElementById("after").src=d.image
+    document.getElementById("dl").href=d.image
+    document.getElementById("dl").innerText="Download"
+  }else alert(d.error||"error")
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body style="background:#000;color:#fff;text-align:center;font-family:sans-serif">
+
+<h2>LOGIN</h2>
+
+<input id="u" placeholder="user"><br><br>
+<input id="p" type="password" placeholder="pass"><br><br>
+
+<button onclick="go()">LOGIN</button>
+
+<script>
+async function go(){
+  let u=uInput.value, p=pInput.value
+
+  let r=await fetch("/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user:u,pass:p})
+  })
+
+  let d=await r.json()
+  if(d.ok){
+    localStorage.user=u
+    location="/app"
+  }else alert("salah 😹")
+}
+
+const uInput=document.getElementById("u")
+const pInput=document.getElementById("p")
+</script>
+
+</body>
+</html>
